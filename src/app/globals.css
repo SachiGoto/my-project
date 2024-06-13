@@ -1,0 +1,86 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+/*
+.background {
+  background: radial-gradient(
+    circle at center,
+    deepskyblue,
+    rgb(206, 130, 239),
+    rgb(59, 59, 199)
+  );
+  background-size: 180% 180%;
+  animation: gradient-animation 35s ease infinite;
+
+  -webkit-animation: AnimationName 35s ease infinite;
+  -moz-animation: AnimationName 35s ease infinite;
+  /* animation: AnimationName 8s ease infinite; */
+/* height: 100vh;
+  width: 100vw;
+} */
+/* 
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 82% 0%;
+  }
+  80% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 82% 0%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 82% 0%;
+  }
+  80% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 82% 0%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 82% 0%;
+  }
+  80% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 82% 0%;
+  }
+}  */
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} */
