@@ -4,6 +4,9 @@ import { render, screen, act, fireEvent, waitFor,cleanup  } from '@testing-libra
 import userEvent from '@testing-library/user-event';
 import mockRouter from 'next-router-mock';
 import Login from './page';
+import { server } from "../../../mocks/server";
+import { rest } from "msw"
+import Router from 'next/router';
 
 // mock next nevigation 
 jest.mock('next/navigation', () => ({
@@ -23,21 +26,23 @@ jest.mock('js-cookie', () => ({
   get: jest.fn()
 }));
 
+// jest.mock('next/router', () => require('next-router-mock'));
 
-global.fetch = jest.fn((input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-  // Define what the mocked fetch should return
-  const response = new Response(JSON.stringify({ token: 'fake-token', expiresIn: 3600 }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' }
-  });
-  return Promise.resolve(response);
-}) as jest.Mock;
+// global.fetch = jest.fn((input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+//   // Define what the mocked fetch should return
+//   const response = new Response(JSON.stringify({ token: 'fake-token', expiresIn: 3600 }), {
+//     status: 200,
+//     headers: { 'Content-Type': 'application/json' }
+//   });
+//   return Promise.resolve(response);
+// }) as jest.Mock;
 
-const handleSubmit = jest.fn();
+// const handleSubmit = jest.fn();
 
+// jest.mock('next/router', () => require('next-router-mock'));
 
 beforeEach(() => {
-  mockRouter.setCurrentUrl('/'); // Set the initial URL
+  mockRouter.setCurrentUrl('/login'); // Set the initial URL
 });
 
 
@@ -85,6 +90,7 @@ describe("Login Page Tests", () => {
     render(<Login />);
     const emailInput = getEmail();
     const passwordInput = getPassword();
+
     const submitButton = screen.getByRole('button', { name: /ログイン/i });
     expect(submitButton).toBeInTheDocument();
     await userEvent.click(submitButton);
@@ -95,37 +101,40 @@ describe("Login Page Tests", () => {
   })
 
 
+
+
+
   // havent figured out how to test these two 
-  it('should trigger the onSubmit function when a user enters valid email and password then hit the log in button ', async () => {
+  it('should direct to the main page if log in was successful', async () => {
     render(<Login />);
+    // const router = useRouter(); 
     const emailInput = screen.getByLabelText(/メールアドレス/i);
-    await userEvent.type(emailInput, 'test@gmail.com');
     const passwordInput = screen.getByLabelText(/パスワード/i);
-    await userEvent.type(passwordInput, 'Test12345!');
-    expect(emailInput).toHaveValue("test@gmail.com");
-    expect(passwordInput).toHaveValue("Test12345!");
     const submitButton = screen.getByRole('button', { name: /ログイン/i });
-    expect(submitButton).toBeInTheDocument();
-    await userEvent.click(submitButton);
-    // expect(handleSubmit).toHaveBeenCalled(); 
+
+    await userEvent.type(emailInput, 'test@gmail.com');
+    await userEvent.type(passwordInput, 'Test12345!');
+    await userEvent.click(submitButton);    
+    const loginState = await screen.findByTestId('loginState'); 
+    expect(loginState).toHaveTextContent('Loggedin');
+    // expect(router.push).toHaveBeenCalledWith('/');
+    expect(Router.push).toHaveBeenCalledWith('/');
 
 })
 
-    it('should show a success toast when a user logged in ', async () => {
-      render(<Login />);
-      const emailInput = screen.getByLabelText(/メールアドレス/i);
-      await userEvent.type(emailInput, 'test@gmail.com');
-      expect(emailInput).toHaveValue("test@gmail.com")
-  })
-
-  it('should show a log in failed toast when a user failed to log in ', async()=>{
+  it('should show a log in failed message when a user failed to log in ', async()=>{
     render(<Login />);
+       server.use(
+      rest.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, (req, res, ctx) => {
+          return res(ctx.status(403));
+      })
+    );
+  
     const submitButton = screen.getByRole('button', { name: /ログイン/i });
     expect(submitButton).toBeInTheDocument();
     await userEvent.click(submitButton);
-
-    const isUserLoggedIn = screen.getByTestId("loginState");
-    expect(isUserLoggedIn).toBeInTheDocument();
+    const loginState = await screen.findByTestId('loginState'); 
+    expect(loginState).toHaveTextContent('Not Loggedin');
   })
 });
 

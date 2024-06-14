@@ -199,7 +199,7 @@ const [settings, setSettings] = useState({
         <Text mt="5%" mb="5%"  fontSize="lg" as="b">
           お気に入り名言リスト
         </Text>
-      </HStack>
+      </Flex>
       <Flex justifyContent="space-around" align="center" mb="5">
     
       </Flex>

@@ -55,6 +55,7 @@ export default function Page() {
       });
 
       if (!response.ok) {
+        
         setIsLoggedin(false);
         toast({
           status: "error",
@@ -62,7 +63,8 @@ export default function Page() {
           title: "ログイン失敗",
           description: "メールアドレスかユーザー名が間違っています。"
         });
-        return
+        throw Error("Login failed")
+        // return
       }
 
       const result = await response.json();
@@ -98,7 +100,7 @@ export default function Page() {
         sameSite: "Strict",
       });
       
-      // router.push("/");
+      router.push("/");
     } catch (error) {
       toast({
         status: "error",
